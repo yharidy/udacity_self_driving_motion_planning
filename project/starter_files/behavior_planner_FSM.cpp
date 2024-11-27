@@ -77,15 +77,15 @@ double BehaviorPlannerFSM::get_look_ahead_distance(const State& ego_state) {
   // TODO-Lookahead: One way to find a reasonable lookahead distance is to find
   // the distance you will need to come to a stop while traveling at speed V and
   // using a comfortable deceleration.
-  auto look_ahead_distance = 1.0;  // <- Fix This
+  auto look_ahead_distance = velocity_mag* velocity_mag /(2*CONFORT_MAX_LON_ACCEL);  // <- Fix This
 
-  // LOG(INFO) << "Calculated look_ahead_distance: " << look_ahead_distance;
+  LOG(INFO) << "Calculated look_ahead_distance: " << look_ahead_distance;
 
   look_ahead_distance =
       std::min(std::max(look_ahead_distance, _lookahead_distance_min),
                _lookahead_distance_max);
 
-  // LOG(INFO) << "Final look_ahead_distance: " << look_ahead_distance;
+  LOG(INFO) << "Final look_ahead_distance: " << look_ahead_distance;
 
   return look_ahead_distance;
 }
@@ -180,9 +180,9 @@ State BehaviorPlannerFSM::state_transition(const State& ego_state, State goal,
     LOG(INFO) << "Ego distance to stop line: " << distance_to_stop_sign;
 
     // TODO-use distance rather than speed: Use distance rather than speed...
-    if (utils::magnitude(ego_state.velocity) <=
-        _stop_threshold_speed) {  // -> Fix this
-      if (distance_to_stop_sign <= P_STOP_THRESHOLD_DISTANCE) {
+    // if (utils::magnitude(ego_state.velocity) <=
+    //     _stop_threshold_speed) {  // -> Fix this
+    if (distance_to_stop_sign <= P_STOP_THRESHOLD_DISTANCE) {
       // TODO-move to STOPPED state: Now that we know we are close or at the
       // stopping point we should change state to "STOPPED"
       _active_maneuver = STOPPED;  // <- Fix This
